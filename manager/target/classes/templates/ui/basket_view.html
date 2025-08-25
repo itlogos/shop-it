@@ -1,0 +1,60 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="utf-8"><title>Basket</title></head>
+<body>
+<h2>Basket</h2>
+
+<p th:if="${msg}" th:text="${msg}"></p>
+
+<div th:if="${basket}">
+  <p><b>ID:</b> <span th:text="${basket.id}"></span></p>
+  <p><b>Status:</b> <span th:text="${basket.status}"></span></p>
+  <p><b>Customer ID:</b> <span th:text="${basket.customerId}"></span></p>
+  <p><b>Created:</b> <span th:text="${basket.createdAt}"></span></p>
+
+  <h3>Items</h3>
+  <table border="1" cellpadding="4" cellspacing="0">
+    <thead>
+    <tr><th>Product ID</th><th>Title</th><th>Qty</th><th>Price</th><th>Line Total</th></tr>
+    </thead>
+    <tbody>
+    <tr th:each="it : ${basket.items}">
+      <td th:text="${it.productId}"></td>
+      <td th:text="${it.title}"></td>
+      <td th:text="${it.quantity}"></td>
+      <td th:text="${it.priceSnapshot}"></td>
+      <td th:text="${it.quantity * it.priceSnapshot}"></td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(basket.items)}"><td colspan="5">No items</td></tr>
+    </tbody>
+    <tfoot>
+    <tr><td colspan="4" style="text-align:right"><b>Total</b></td>
+      <td th:text="${basket.total}"></td>
+    </tr>
+    </tfoot>
+  </table>
+
+  <h3>Add Item</h3>
+  <form th:action="@{|/ui/baskets/${basket.id}/items|}" method="post">
+    <label>Product:
+      <select name="productId" required>
+        <option value="" disabled selected>Select product...</option>
+        <option th:each="p : ${products}"
+                th:value="${p.id}"
+                th:text="${p.id + ' — ' + p.title + ' (' + p.price + ')'}">
+        </option>
+      </select>
+    </label>
+    <label>Quantity: <input type="number" name="quantity" value="1" min="1" required></label>
+    <button type="submit" th:disabled="${basket.status.name() != 'CREATED'}">Add</button>
+  </form>
+
+  <h3>Reserve</h3>
+  <form th:action="@{|/ui/baskets/${basket.id}/reserve|}" method="post">
+    <button type="submit" th:disabled="${basket.status.name() != 'CREATED'}">Reserve Basket</button>
+  </form>
+</div>
+
+<p><a th:href="@{/ui}">Back</a></p>
+</body>
+</html>

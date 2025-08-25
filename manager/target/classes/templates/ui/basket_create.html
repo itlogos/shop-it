@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Basket</title>
+</head>
+<body>
+<h2>Create Basket by Phone</h2>
+
+<p th:if="${msg}" th:text="${msg}"></p>
+
+<form th:action="@{/ui/baskets}" method="post">
+  <label>
+    Customer phone:
+    <input type="text" name="phone" th:value="${prefillPhone}" required>
+  </label>
+  <button type="submit">Create Basket</button>
+</form>
+
+<p><a th:href="@{/ui}">Back</a></p>
+</body>
+</html>
